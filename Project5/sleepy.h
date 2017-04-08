@@ -18,6 +18,8 @@
  */
 struct sleepy_dev {
   unsigned char *data;
+  wait_queue_head_t wait_queue;	
+  int awakeflag;	
   struct mutex sleepy_mutex; 
   struct cdev cdev;
 };
