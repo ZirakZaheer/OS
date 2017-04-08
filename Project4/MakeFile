@@ -1,0 +1,5 @@
+CC=gcc
+CFLAGS=-I.
+
+problemmake: Problem_1.o Problem_2.o Problem_3.o
+     $(CC) -o problemmake Problem_1.o Problem_2.o Problem_3.o -I.
