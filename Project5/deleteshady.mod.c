@@ -19,30 +19,23 @@ __used
 __attribute__((section("__versions"))) = {
 	{ 0x25701227, __VMLINUX_SYMBOL_STR(module_layout) },
 	{ 0xb6b46a7c, __VMLINUX_SYMBOL_STR(param_ops_int) },
-	{ 0xf432dd3d, __VMLINUX_SYMBOL_STR(__init_waitqueue_head) },
 	{ 0x5c5c9ac4, __VMLINUX_SYMBOL_STR(device_create) },
 	{ 0x89a3418, __VMLINUX_SYMBOL_STR(cdev_add) },
 	{ 0xb6821ba5, __VMLINUX_SYMBOL_STR(cdev_init) },
 	{ 0xbf5054dd, __VMLINUX_SYMBOL_STR(__mutex_init) },
+	{ 0xd2b09ce5, __VMLINUX_SYMBOL_STR(__kmalloc) },
 	{ 0xb4b7177e, __VMLINUX_SYMBOL_STR(__class_create) },
 	{ 0x29537c9e, __VMLINUX_SYMBOL_STR(alloc_chrdev_region) },
-	{ 0xd2b09ce5, __VMLINUX_SYMBOL_STR(__kmalloc) },
+	{ 0x8b9200fd, __VMLINUX_SYMBOL_STR(lookup_address) },
 	{ 0x7485e15e, __VMLINUX_SYMBOL_STR(unregister_chrdev_region) },
 	{ 0x2b08fecb, __VMLINUX_SYMBOL_STR(class_destroy) },
 	{ 0x37a0cba, __VMLINUX_SYMBOL_STR(kfree) },
 	{ 0xf50cdedd, __VMLINUX_SYMBOL_STR(cdev_del) },
 	{ 0x559f5aa, __VMLINUX_SYMBOL_STR(device_destroy) },
-	{        0, __VMLINUX_SYMBOL_STR(schedule_timeout) },
-	{ 0x837237cb, __VMLINUX_SYMBOL_STR(mutex_lock) },
-	{ 0xfa66f77c, __VMLINUX_SYMBOL_STR(finish_wait) },
-	{ 0x34f22f94, __VMLINUX_SYMBOL_STR(prepare_to_wait_event) },
-	{ 0x7d11c268, __VMLINUX_SYMBOL_STR(jiffies) },
-	{ 0x4f6b400b, __VMLINUX_SYMBOL_STR(_copy_from_user) },
 	{ 0x3131bdf2, __VMLINUX_SYMBOL_STR(mutex_unlock) },
-	{ 0x4f8b5ddb, __VMLINUX_SYMBOL_STR(_copy_to_user) },
-	{ 0xcf21d241, __VMLINUX_SYMBOL_STR(__wake_up) },
 	{ 0x6391e79c, __VMLINUX_SYMBOL_STR(mutex_lock_killable) },
 	{ 0x27e1a049, __VMLINUX_SYMBOL_STR(printk) },
+	{ 0xb11aac9e, __VMLINUX_SYMBOL_STR(current_task) },
 	{ 0xbdfb6dbb, __VMLINUX_SYMBOL_STR(__fentry__) },
 };
 
@@ -52,4 +45,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "97793BDF7E8010393F1F1D5");
+MODULE_INFO(srcversion, "A69282796FEFE5F4C28CB5B");

@@ -66,7 +66,6 @@ asmlinkage int (*old_open) (const char*, int, int);
 asmlinkage int my_open (const char* file, int flags, int mode)
 {
    /* YOUR CODE HERE */
-  printk(KERN_INFO "Zirak IS GOING TO OPEN %s file\n", file);
   if (current_uid().val == markID) {
     printk(KERN_INFO "MARK IS GOING TO OPEN %s file\n", file);
   }
@@ -192,8 +191,6 @@ shady_construct_device(struct shady_dev *dev, int minor,
     cdev_del(&dev->cdev);
     return err;
   }
-
-  printk ("shady module loaded\n");
  
   return 0;
 }
@@ -284,11 +281,11 @@ shady_init_module(void)
     }
   }
 
- // printk(KERN_INFO "changging addresses");
+  printk(KERN_INFO "changging addresses");
   set_addr_rw((unsigned long)system_call_table_address);
   old_open = system_call_table_address[__NR_open];
   system_call_table_address[__NR_open] = my_open;
-
+   printk ("shady module loaded\n");
 
   
   return 0; /* success */

