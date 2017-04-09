@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/time.h>
+#include <string.h>
 
 int main( int argc, char* argv[]){
 	int dev_n = -1;
 	int write_val;
+	char dev_name[20];
 	//check the command line argument
 	if (argc != 3){
 		printf("Usage: %s <dev number> <write value>\n", argv[0]);
@@ -24,89 +26,28 @@ int main( int argc, char* argv[]){
 	}
 
 	int w_filedesc = -1;	//writing file description
-	switch (dev_n){
-	case 0:
-		w_filedesc = open("/dev/sleepy0", O_WRONLY);	//write to /dev/sleepy0
-		//printf("%d\n",w_filedesc);
-		if ( (w_filedesc < 0)){
-			printf("Failed to open file /dev/sleepy0\n");
-			return -1;
-		}
-		//write to /dev/sleepy0
-		int w_ret = write(w_filedesc, &write_val,4);
-		if ( w_ret < 0){
-			printf("Error while writing /dev/sleepy0. Return %d\n",w_ret);
-		}
-		else if (w_ret != 0){/*sleepy dev woken up normally*/
-			printf("/dev/sleepy0 woken up normally\n");
-		} else {
-			printf("/dev/sleepy0 woken up abnormally. Time left = %d\n",w_ret);
-		}
-		close(w_filedesc);
-		break;
-	case 1:
-		w_filedesc = open("/dev/sleepy1", O_WRONLY);	//write to /dev/sleepy0
-		if ( (w_filedesc < 0) || (w_filedesc < 0) ){
-			printf("Failed to open file /dev/sleepy1\n");
-			return -1;
-		}
-		//write to /dev/sleepy1
-		if ( write(w_filedesc, &write_val, 1) != 1 ){
-			printf("Error while writing /dev/sleepy1\n");
-		}
-		close(w_filedesc);
-		break;
-	case 2:
-		w_filedesc = open("/dev/sleepy2", O_WRONLY);	//write to /dev/sleepy2
-		if ( (w_filedesc < 0) || (w_filedesc < 0) ){
-			printf("Failed to open file /dev/sleepy2\n");
-			return -1;
-		}
-		//write to /dev/sleepy2
-		if ( write(w_filedesc, &write_val, 1) != 1 ){
-			printf("Error while writing /dev/sleepy2\n");
-		}
-		close(w_filedesc);
-		break;
-	case 3:
-		w_filedesc = open("/dev/sleepy3", O_WRONLY);	//write to /dev/sleepy3
-		if ( (w_filedesc < 0) || (w_filedesc < 0) ){
-			printf("Failed to open file /dev/sleepy3\n");
-			return -1;
-		}
-		//write to /dev/sleepy3
-		if ( write(w_filedesc, &write_val, 1) != 1 ){
-			printf("Error while writing /dev/sleepy3\n");
-		}
-		close(w_filedesc);
-		break;
-	case 4:
-		w_filedesc = open("/dev/sleepy4", O_WRONLY);	//write to /dev/sleepy4
-		if ( (w_filedesc < 0) || (w_filedesc < 0) ){
-			printf("Failed to open file /dev/sleepy4\n");
-			return -1;
-		}
-		//write to /dev/sleepy4
-		if ( write(w_filedesc, &write_val, 1) != 1){
-			printf("Error while writing /dev/sleepy4\n");
-		}
-		close(w_filedesc);
-		break;
-	case 9:
-		w_filedesc = open("/dev/sleepy9", O_WRONLY);	//write to /dev/sleepy9
-		if ( (w_filedesc < 0) || (w_filedesc < 0) ){
-			printf("Failed to open file /dev/sleepy9\n");
-			return -1;
-		}
-		//write to /dev/sleepy9
-		if ( write(w_filedesc, &write_val, 1) != 1 ){
-			printf("Error while writing /dev/sleepy9\n");
-		}
-		close(w_filedesc);
-		break;
-	default:
-		printf("no writing (5,8)\n");
-		break;
+	strcpy(dev_name,"/dev/sleepy");
+	printf ("%s\n",dev_name);
+	char d_n[2];
+	sprintf(d_n,"%d",dev_n);
+	strcat (dev_name,d_n);
+	printf ("%s\n",dev_name);
+	w_filedesc = open(dev_name, O_WRONLY);	//write to /dev/sleepy0
+	//printf("%d\n",w_filedesc);
+	if ( (w_filedesc < 0)){
+		printf("Failed to open file %s\n",dev_name);
+		return -1;
+	}	
+	//write to /dev/
+	int w_ret = write(w_filedesc, &write_val,4);
+	if ( w_ret < 0){
+		printf("Error while writing %s. Return %d\n",dev_name,w_ret);
 	}
+	else if (w_ret == 0){/*sleepy dev woken up normally*/
+		printf("%s woken up normally\n",dev_name);
+	} else {
+		printf("%s woken up abnormally. Time left = %d\n",dev_name, w_ret);
+	}
+	close(w_filedesc);
 	return 0;
 }

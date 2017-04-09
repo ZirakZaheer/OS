@@ -32,10 +32,10 @@ __attribute__((section("__versions"))) = {
 	{ 0x37a0cba, __VMLINUX_SYMBOL_STR(kfree) },
 	{ 0x961b0ffc, __VMLINUX_SYMBOL_STR(cdev_del) },
 	{ 0x81ba77be, __VMLINUX_SYMBOL_STR(device_destroy) },
-	{        0, __VMLINUX_SYMBOL_STR(schedule_timeout) },
 	{ 0xaaa3b254, __VMLINUX_SYMBOL_STR(mutex_lock) },
 	{ 0xfa66f77c, __VMLINUX_SYMBOL_STR(finish_wait) },
 	{ 0x34f22f94, __VMLINUX_SYMBOL_STR(prepare_to_wait_event) },
+	{        0, __VMLINUX_SYMBOL_STR(schedule_timeout) },
 	{ 0x7d11c268, __VMLINUX_SYMBOL_STR(jiffies) },
 	{ 0x4f6b400b, __VMLINUX_SYMBOL_STR(_copy_from_user) },
 	{ 0x9f14c292, __VMLINUX_SYMBOL_STR(mutex_unlock) },
@@ -52,4 +52,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "30537CC514828E0C97DEC61");
+MODULE_INFO(srcversion, "94AC0FDD0219C72D372D1C6");

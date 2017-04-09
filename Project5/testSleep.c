@@ -51,7 +51,7 @@ int main( int argc, char* argv[]){
 			return -1;
 		}
 		//write to /dev/sleepy1
-		if ( write(w_filedesc, &write_val, 1) != 1 ){
+		if ( write(w_filedesc, &write_val, 4) != 1 ){
 			printf("Error while writing /dev/sleepy1\n");
 		}
 		close(w_filedesc);
@@ -63,7 +63,7 @@ int main( int argc, char* argv[]){
 			return -1;
 		}
 		//write to /dev/sleepy2
-		if ( write(w_filedesc, &write_val, 1) != 1 ){
+		if ( write(w_filedesc, &write_val, 4) != 1 ){
 			printf("Error while writing /dev/sleepy2\n");
 		}
 		close(w_filedesc);
@@ -75,7 +75,7 @@ int main( int argc, char* argv[]){
 			return -1;
 		}
 		//write to /dev/sleepy3
-		if ( write(w_filedesc, &write_val, 1) != 1 ){
+		if ( write(w_filedesc, &write_val, 4) != 1 ){
 			printf("Error while writing /dev/sleepy3\n");
 		}
 		close(w_filedesc);
@@ -87,7 +87,7 @@ int main( int argc, char* argv[]){
 			return -1;
 		}
 		//write to /dev/sleepy4
-		if ( write(w_filedesc, &write_val, 1) != 1){
+		if ( write(w_filedesc, &write_val, 4) != 1){
 			printf("Error while writing /dev/sleepy4\n");
 		}
 		close(w_filedesc);
@@ -99,7 +99,7 @@ int main( int argc, char* argv[]){
 			return -1;
 		}
 		//write to /dev/sleepy9
-		if ( write(w_filedesc, &write_val, 1) != 1 ){
+		if ( write(w_filedesc, &write_val, 4) != 1 ){
 			printf("Error while writing /dev/sleepy9\n");
 		}
 		close(w_filedesc);

@@ -91,7 +91,7 @@ sleepy_read(struct file *filp, char __user *buf, size_t count,
 {
   struct sleepy_dev *dev = (struct sleepy_dev *)filp->private_data;
   ssize_t returnValue = 0;
-  int copyResult = 0;
+  int copyResult;
 
   int waitResult = -1;
 
@@ -112,7 +112,7 @@ sleepy_read(struct file *filp, char __user *buf, size_t count,
   /* YOUR CODE HERE */
   copyResult = copy_to_user(dev->data, buf, count);
   if (copyResult !=0) {
-    printk(KERN_WARNING "copy data failed\n");
+    printk(KERN_WARNING "copy data failed2\n");
     mutex_unlock(&dev->sleepy_mutex);
     return -EFAULT;
   }
@@ -131,7 +131,7 @@ sleepy_write(struct file *filp, const char __user *buf, size_t count,
   ssize_t returnValue = 0;
   int copyResult = 0;
       unsigned long sleepTime, wakeupTime;
-  unsigned long timePassed, elapsedTime;
+  unsigned long timePassed;//, elapsedTime;
   int interruptFlag = 0;
   int writeValue=0;
 
@@ -149,10 +149,11 @@ sleepy_write(struct file *filp, const char __user *buf, size_t count,
   //copy data from user and ensure copy is successfull
   copyResult = copy_from_user(dev->data, buf, count);
   if (copyResult !=0) {
-    printk(KERN_WARNING "copy data failed\n");
-    mutex_unlock(&dev->sleepy_mutex);
-    return -EFAULT;
+   printk(KERN_WARNING "copy data failed\n");
+   mutex_unlock(&dev->sleepy_mutex);
+   return -EFAULT;
   }
+
 
   writeValue = *(int*)dev->data;
   if (*(int*)dev->data < 0) {
@@ -185,6 +186,10 @@ sleepy_write(struct file *filp, const char __user *buf, size_t count,
   mutex_unlock(&dev->sleepy_mutex);
   return returnValue;
 }
+
+
+
+
 
 loff_t 
 sleepy_llseek(struct file *filp, loff_t off, int whence)
@@ -242,6 +247,15 @@ sleepy_construct_device(struct sleepy_dev *dev, int minor,
     cdev_del(&dev->cdev);
     return err;
   }
+
+  dev->data = (char*) kzalloc(4*sizeof(char),GFP_KERNEL);
+  if (dev->data == NULL){
+  printk(KERN_WARNING "data allocation.\n");
+  return -EFAULT;
+  }
+  dev->awakeflag = 0;
+  init_waitqueue_head(&dev->wait_queue);
+  
   return 0;
 }
 
